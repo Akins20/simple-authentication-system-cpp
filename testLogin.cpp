@@ -8,19 +8,20 @@ using namespace std;
 
 const string DATA_FILE = "userdata.txt";
 
-// Function to clear the console based on the operating system
-void clearScreen()
+// Simple hash function to "hash" the password by shifting ASCII values
+string hashPassword(const string &password)
 {
-#ifdef _WIN32
-    system("CLS"); // Command for Windows
-#else
-    system("clear"); // Command for Linux/Unix
-#endif
+    string hashed = password;
+    for (char &c : hashed)
+    {
+        c += 3; // Shift each character by 3 ASCII values (simple encoding)
+    }
+    return hashed;
 }
 
 void userDashboard()
 {
-    clearScreen();
+
     cout << "Welcome to the dashboard!" << endl;
     cout << "1. View profile" << endl;
     cout << "2. Update profile" << endl;
@@ -32,7 +33,6 @@ void userDashboard()
 void welcome()
 {
 
-    clearScreen();
     cout << "Welcome to Simple Auth System!" << endl;
     cout << "1. Login" << endl;
     cout << "2. Register" << endl;
@@ -42,7 +42,6 @@ void welcome()
 
 void registerUser()
 {
-    clearScreen();
     string username, password;
 
     cout << "Registering new user..." << endl;
@@ -53,12 +52,12 @@ void registerUser()
     cout << "Enter your password: ";
     cin >> password;
 
+    string hashedPassword = hashPassword(password); // Hash the password before storing it
+
     ofstream file(DATA_FILE, ios::app);
     file << username << endl;
-    file << password << endl;
+    file << hashedPassword << endl;
     file.close();
-
-    clearScreen();
 
     cout << "Registration successful!" << endl;
     cout << "Welcome " << username << "!" << endl;
@@ -76,13 +75,14 @@ pair<string, string> loginUser()
     cout << "Enter your password: ";
     cin >> password;
 
-    return make_pair(username, password); // Return a pair of username and password
+    string hashedPassword = hashPassword(password); // Hash the password before storing it
+
+    return make_pair(username, hashedPassword); // Return a pair of username and hashed password
 }
 
 bool isLoggedIn()
 {
     // Read the username and password from the file one by one and compare them with the inputted credentials
-    clearScreen();
     string storedUsername, storedPassword;
     string inputtedUsername, inputtedPassword;
     auto creds = loginUser();
