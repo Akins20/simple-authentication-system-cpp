@@ -59,6 +59,8 @@
   "files.associations": {
     ".env*": "dotenv",
     "ostream": "cpp",
-    "source_location": "cpp"
+    "source_location": "cpp",
+    "chrono": "cpp",
+    "utility": "cpp"
   }
 }
